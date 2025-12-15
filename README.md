@@ -4,7 +4,7 @@
 Script Python untuk melakukan scraping (ekstraksi) komentar dari postingan Instagram menggunakan Selenium WebDriver. Script ini dirancang untuk mengambil data komentar secara otomatis dan menyimpannya dalam format CSV.
 
 ## Fitur
-- Login otomatis ke Instagram
+- Login otomatis ke Instagram menggunakan file `.env`
 - Otomatis menangani popup (Save Login Info, Notifications)
 - Otomatis memuat komentar lama dengan mengklik tombol "Load more"
 - Ekstraksi username dan teks komentar
@@ -12,6 +12,7 @@ Script Python untuk melakukan scraping (ekstraksi) komentar dari postingan Insta
 - Support untuk emoji dan karakter khusus
 - Filter duplikat komentar otomatis
 - Struktur kode modular (3 file terpisah)
+- Keamanan kredensial dengan environment variables
 
 ## Requirements
 - Python 3.7 atau lebih tinggi
@@ -22,7 +23,8 @@ Script Python untuk melakukan scraping (ekstraksi) komentar dari postingan Insta
 
 ### 1. Clone atau Download Project
 ```bash
-cd d:\SEMESTER 5\TEORI\DataMINIG\scraping
+git clone https://github.com/hery2606/SCRAPER-DATA-KOMEN-IG-.git
+cd scraping
 ```
 
 ### 2. Buat Virtual Environment (Opsional tapi Direkomendasikan)
@@ -41,29 +43,41 @@ source .venv/bin/activate
 
 ### 4. Install Dependencies
 ```bash
-pip install selenium pandas webdriver-manager
+pip install selenium pandas webdriver-manager python-dotenv
 ```
 
-Atau menggunakan requirements.txt (jika ada):
+Atau menggunakan requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
 
 ## Konfigurasi
 
-### 1. Setup Kredensial Instagram
-Buka file `config.py` dan isi dengan kredensial Anda:
+### 1. Setup File Environment (.env)
+Buat file `.env` di root folder project (copy dari `.env.example`):
 
-```python
-# Konfigurasi Login Instagram
-INSTAGRAM_USERNAME = "username_anda"  # Ganti dengan username Instagram Anda
-INSTAGRAM_PASSWORD = "password_anda"  # Ganti dengan password Instagram Anda
+```bash
+# Windows
+copy .env.example .env
+
+# Linux/Mac
+cp .env.example .env
 ```
 
-⚠️ **PENTING**: Jangan share file `config.py` ke publik karena berisi password Anda!
+Kemudian edit file `.env` dan isi dengan kredensial Anda:
+
+```env
+INSTAGRAM_USERNAME=username_anda
+INSTAGRAM_PASSWORD=password_anda
+```
+
+⚠️ **SANGAT PENTING**: 
+- File `.env` **TIDAK BOLEH** di-commit ke Git!
+- Sudah ditambahkan ke `.gitignore` secara otomatis
+- **JANGAN SHARE** file `.env` ke siapapun!
 
 ### 2. Setup URL Postingan
-Masih di file `config.py`, atur URL postingan yang ingin di-scrape:
+Buka file `config.py` dan atur URL postingan yang ingin di-scrape:
 
 ```python
 # Konfigurasi Scraping
@@ -75,12 +89,19 @@ LOAD_MORE_ATTEMPTS = 5  # Berapa kali mencoba klik "Load More"
 
 ## Cara Penggunaan
 
-### 1. Jalankan Script
+### 1. Pastikan File .env Sudah Dibuat
+```bash
+# Cek apakah file .env sudah ada
+dir .env  # Windows
+ls -la .env  # Linux/Mac
+```
+
+### 2. Jalankan Script
 ```bash
 python main.py
 ```
 
-### 2. Proses Otomatis
+### 3. Proses Otomatis
 Script akan menjalankan proses berikut secara otomatis:
 
 1. **Setup Browser**
@@ -88,13 +109,14 @@ Script akan menjalankan proses berikut secara otomatis:
    - Halaman login Instagram akan dimuat
 
 2. **Login Otomatis**
+   - Membaca kredensial dari file `.env`
    - Script akan mengisi username dan password secara otomatis
    - Klik tombol login
    - Menangani popup "Save Login Info" (klik "Not Now")
    - Menangani popup "Turn on Notifications" (klik "Not Now")
 
 3. **Navigasi ke Postingan**
-   - Membuka URL postingan yang telah dikonfigurasi
+   - Membuka URL postingan yang telah dikonfigurasi di `config.py`
    - Menunggu halaman dimuat sempurna
 
 4. **Load Komentar**
@@ -110,7 +132,7 @@ Script akan menjalankan proses berikut secara otomatis:
    - Menyimpan hasil ke file `hasil_komentar_ig.csv`
    - Menampilkan preview data
 
-### 3. Output di Terminal
+### 4. Output di Terminal
 Contoh output yang akan ditampilkan:
 ```
 >>> Menyiapkan browser...
@@ -156,21 +178,71 @@ File CSV menggunakan encoding `utf-8-sig` agar dapat dibuka dengan baik di Micro
 ## Struktur Project
 ```
 scraping/
-├── main.py                    # File utama untuk menjalankan program
-├── scraper.py                 # Class untuk logic scraping
-├── config.py                  # Konfigurasi (username, password, URL)
-├── readme                     # Dokumentasi (file ini)
-├── hasil_komentar_ig.csv     # Output hasil scraping (generated)
-├── .venv/                     # Virtual environment (opsional)
-└── .gitignore                 # Ignore file config.py (jika pakai Git)
+├── main.py                      # File utama untuk menjalankan program
+├── scraper.py                   # Class untuk logic scraping
+├── config.py                    # Konfigurasi (URL, settings)
+├── .env                         # Kredensial login (JANGAN COMMIT!)
+├── .env.example                 # Template file .env
+├── README.md                    # Dokumentasi (file ini)
+├── requirements.txt             # List dependencies Python
+├── .gitignore                   # File yang diabaikan Git
+├── hasil_komentar_ig.csv        # Output hasil scraping (generated)
+├── .venv/                       # Virtual environment (opsional)
+└── __pycache__/                 # Python cache (generated)
 ```
 
 ### Penjelasan File:
 - **main.py**: Entry point, mengatur alur program dari setup browser hingga save CSV
 - **scraper.py**: Berisi class `InstagramScraper` dengan method login dan extract comments
-- **config.py**: Menyimpan semua konfigurasi (username, password, URL postingan)
+- **config.py**: Menyimpan konfigurasi non-sensitif (URL postingan, settings scraping)
+- **.env**: Menyimpan kredensial login (username & password) - **TIDAK DI-COMMIT**
+- **.env.example**: Template untuk file .env yang aman di-share
+- **.gitignore**: Daftar file yang tidak di-commit ke Git
+
+## File .gitignore
+Project ini sudah dilengkapi dengan `.gitignore` untuk melindungi data sensitif:
+
+```gitignore
+# Environment variables (CREDENTIALS)
+.env
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Output files
+hasil_komentar_ig.csv
+*.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+```
 
 ## Troubleshooting
+
+### Error: File .env tidak ditemukan
+```bash
+# Buat file .env dari template
+copy .env.example .env  # Windows
+cp .env.example .env    # Linux/Mac
+
+# Kemudian edit .env dan isi dengan kredensial Anda
+```
+
+### Error: python-dotenv not found
+```bash
+pip install python-dotenv
+```
 
 ### Browser tidak terbuka
 - Pastikan Google Chrome sudah terinstall
@@ -178,7 +250,8 @@ scraping/
 - Pastikan ChromeDriver compatible dengan versi Chrome Anda
 
 ### Login gagal atau error
-- Periksa kembali username dan password di `config.py`
+- Periksa kembali username dan password di file `.env`
+- Pastikan tidak ada spasi di awal/akhir username/password
 - Pastikan koneksi internet stabil
 - Instagram mungkin meminta verifikasi (cek email/SMS)
 - Coba gunakan akun yang sudah pernah login di browser sebelumnya
@@ -200,23 +273,35 @@ scraping/
 
 ## Tips Penggunaan
 
-### 1. Untuk Scraping Banyak Postingan
+### 1. Keamanan Kredensial
+```bash
+# JANGAN PERNAH:
+❌ Commit file .env ke Git
+❌ Share file .env ke publik
+❌ Screenshot file .env
+❌ Hardcode password di code
+
+# SELALU:
+✅ Gunakan file .env untuk kredensial
+✅ Tambahkan .env ke .gitignore
+✅ Share .env.example sebagai template
+✅ Ganti password jika terlanjur ter-expose
+```
+
+### 2. Untuk Scraping Banyak Postingan
 Edit `config.py` dan ubah `POST_URL` setiap kali scraping, atau:
 - Buat list URL di config
 - Loop di `main.py` untuk scrape multiple posts
 
-### 2. Menghindari Deteksi Bot
+### 3. Menghindari Deteksi Bot
 - Jangan scrape terlalu banyak dalam waktu singkat
 - Tambah jeda random: `time.sleep(random.uniform(2, 5))`
 - Gunakan headless mode dengan hati-hati (lebih mudah terdeteksi)
 
-### 3. Menyimpan Config dengan Aman
-Buat file `.gitignore` dan tambahkan:
-```
-config.py
-.venv/
-hasil_komentar_ig.csv
-__pycache__/
+### 4. Backup Data
+```bash
+# Backup hasil scraping dengan timestamp
+python main.py && copy hasil_komentar_ig.csv backup_$(date +%Y%m%d_%H%M%S).csv
 ```
 
 ## Catatan Penting
@@ -226,13 +311,25 @@ __pycache__/
 - Jangan melakukan scraping berlebihan yang dapat membebani server Instagram
 - Gunakan dengan bijak dan bertanggung jawab
 - Instagram dapat memblokir akun jika mendeteksi aktivitas mencurigakan
-- **JANGAN SHARE** file `config.py` yang berisi password Anda
+- **JANGAN SHARE** file `.env` yang berisi password Anda
+- **SEGERA GANTI PASSWORD** jika file `.env` ter-expose ke publik
 
 ## Lisensi
 Proyek ini dibuat untuk keperluan akademik dan pembelajaran.
 
 ## Kontak
 Untuk pertanyaan atau saran, silakan hubungi developer.
+
+## Changelog
+### v2.0 (Latest)
+- ✅ Menambahkan support `.env` untuk keamanan kredensial
+- ✅ Memisahkan kode menjadi 3 file modular
+- ✅ Menambahkan `.gitignore` yang komprehensif
+- ✅ Menambahkan `.env.example` sebagai template
+- ✅ Meningkatkan dokumentasi README
+
+### v1.0
+- ✅ Versi awal dengan login manual
 
 ---
 **Dibuat untuk keperluan Data Mining - Semester 5**
