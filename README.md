@@ -53,35 +53,26 @@ pip install -r requirements.txt
 
 ## Konfigurasi
 
-### 1. Setup File Environment (.env)
-Buat file `.env` di root folder project (copy dari `.env.example`):
+### 1. Setup File `config.py`
 
-```bash
-# Windows
-copy .env.example .env
+Kemudian edit file `config.py` dan isi dengan kredensial Anda:
 
-# Linux/Mac
-cp .env.example .env
-```
-
-Kemudian edit file `.env` dan isi dengan kredensial Anda:
-
-```env
+```config
 INSTAGRAM_USERNAME=username_anda
 INSTAGRAM_PASSWORD=password_anda
 ```
 
 ⚠️ **SANGAT PENTING**: 
-- File `.env` **TIDAK BOLEH** di-commit ke Git!
+- File `config.py` **TIDAK BOLEH** di-commit ke Git!
 - Sudah ditambahkan ke `.gitignore` secara otomatis
-- **JANGAN SHARE** file `.env` ke siapapun!
+- **JANGAN SHARE** file `.config.py` ke siapapun!
 
 ### 2. Setup URL Postingan
 Buka file `config.py` dan atur URL postingan yang ingin di-scrape:
 
 ```python
 # Konfigurasi Scraping
-POST_URL = "https://www.instagram.com/p/DSKpDExgYeO/?img_index=1"  # Ganti dengan link postingan target
+POST_URL = "https://www.instagram.com/p/DSKpDExgYeO/?img_index=1"  # Ganti sesuai dengan dengan link postingan target
 MAX_COMMENTS = 50  # Target jumlah komentar
 SCROLL_PAUSE = 2  # Jeda scroll dalam detik
 LOAD_MORE_ATTEMPTS = 5  # Berapa kali mencoba klik "Load More"
