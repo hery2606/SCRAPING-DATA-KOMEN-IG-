@@ -4,7 +4,7 @@
 Script Python untuk melakukan scraping (ekstraksi) komentar dari postingan Instagram menggunakan Selenium WebDriver. Script ini dirancang untuk mengambil data komentar secara otomatis dan menyimpannya dalam format CSV.
 
 ## Fitur
-- Login otomatis ke Instagram menggunakan file `.env`
+- Login otomatis ke Instagram menggunakan file `config.py`
 - Otomatis menangani popup (Save Login Info, Notifications)
 - Otomatis memuat komentar lama dengan mengklik tombol "Load more"
 - Ekstraksi username dan teks komentar
@@ -171,9 +171,7 @@ File CSV menggunakan encoding `utf-8-sig` agar dapat dibuka dengan baik di Micro
 scraping/
 ├── main.py                      # File utama untuk menjalankan program
 ├── scraper.py                   # Class untuk logic scraping
-├── config.py                    # Konfigurasi (URL, settings)
-├── .env                         # Kredensial login (JANGAN COMMIT!)
-├── .env.example                 # Template file .env
+├── config.py                    # Konfigurasi (URL, settings), Kredensial login (JANGAN COMMIT!)
 ├── README.md                    # Dokumentasi (file ini)
 ├── requirements.txt             # List dependencies Python
 ├── .gitignore                   # File yang diabaikan Git
@@ -185,9 +183,7 @@ scraping/
 ### Penjelasan File:
 - **main.py**: Entry point, mengatur alur program dari setup browser hingga save CSV
 - **scraper.py**: Berisi class `InstagramScraper` dengan method login dan extract comments
-- **config.py**: Menyimpan konfigurasi non-sensitif (URL postingan, settings scraping)
-- **.env**: Menyimpan kredensial login (username & password) - **TIDAK DI-COMMIT**
-- **.env.example**: Template untuk file .env yang aman di-share
+- **config.py**: Menyimpan konfigurasi sensitif (URL postingan, settings scraping, username dan password)- **TIDAK DI-COMMIT**
 - **.gitignore**: Daftar file yang tidak di-commit ke Git
 
 ## File .gitignore
@@ -267,15 +263,13 @@ pip install python-dotenv
 ### 1. Keamanan Kredensial
 ```bash
 # JANGAN PERNAH:
-❌ Commit file .env ke Git
-❌ Share file .env ke publik
+❌ Commit file `config.py` ke Git
+❌ Share file `config.py` ke publik
 ❌ Screenshot file .env
 ❌ Hardcode password di code
 
 # SELALU:
-✅ Gunakan file .env untuk kredensial
-✅ Tambahkan .env ke .gitignore
-✅ Share .env.example sebagai template
+✅ Gunakan file config.py untuk kredensial
 ✅ Ganti password jika terlanjur ter-expose
 ```
 
@@ -310,17 +304,6 @@ Proyek ini dibuat untuk keperluan akademik dan pembelajaran.
 
 ## Kontak
 Untuk pertanyaan atau saran, silakan hubungi developer.
-
-## Changelog
-### v2.0 (Latest)
-- ✅ Menambahkan support `.env` untuk keamanan kredensial
-- ✅ Memisahkan kode menjadi 3 file modular
-- ✅ Menambahkan `.gitignore` yang komprehensif
-- ✅ Menambahkan `.env.example` sebagai template
-- ✅ Meningkatkan dokumentasi README
-
-### v1.0
-- ✅ Versi awal dengan login manual
 
 ---
 **Dibuat untuk keperluan Data Mining - Semester 5**
